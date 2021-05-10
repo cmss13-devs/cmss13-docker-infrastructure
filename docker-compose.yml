@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  cm13-mysql:
+    image: mysql:8
+    restart: always
+    ports:
+      - "127.0.0.1:3306:3306"
+    environment:
+      MYSQL_DATABASE: cm13
+      MYSQL_USER: cm13
+      MYSQL_PASSWORD: ideallychangethis
+      MYSQL_ROOT_PASSWORD: ideallychangethis
+    volumes:
+      - cm13-mysql:/var/lib/mysql
+    networks:
+      - cm13-net
+
+  cm13-game:
+    image: registry.gitlab.com/mekkiti/colonial-warfare/production-dev:latest
+    deploy:
+      labels:
+        com.centurylinklabs.watchtower.enable: true
+    ports:
+      - "1400:1400"
+    volumes:
+      - cm13-data:/cm/data
+      - type: bind
+        source: ./config
+        target: /cm/config
+        read_only: true
+    networks:
+      - cm13-net
+
+  cm13-watchtower:
+    image: containrrr/watchtower
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /root/.docker/config.json:/config.json
+    command: --interval 30 --label-enable --no-restart --include-stopped
+
+volumes:
+  cm13-mysql:
+    external: true
+  cm13-data:
+    external: true
