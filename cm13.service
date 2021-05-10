@@ -4,14 +4,12 @@ After=docker.service
 Requires=docker.service
 
 [Service]
-WorkingDirectory=/srv/cm13-instance
+WorkingDirectory=/srv/colonial-warfare-production
 TimeoutStartSec=0
 Restart=always
-ExecStartPre=docker compose stop cm13-game
-ExecStartPre=-docker compose pull
-ExecStartPre=docker compose create cm13-game
-ExecStart=docker compose up
-ExecStop=docker compose down
+ExecStartPre=docker-compose stop cm13-game-prod
+ExecStart=docker-compose up --build
+ExecStop=docker-compose down
 
 [Install]
 WantedBy=multi-user.target
