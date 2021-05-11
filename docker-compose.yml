@@ -17,8 +17,7 @@ services:
       - cm13-net-prod
 
   cm13-game-prod:
-    build:
-      context: .
+    image: registry.gitlab.com/mekkiti/colonial-warfare-production/production-dev
     ports:
       - "1400:1400"
     volumes:
