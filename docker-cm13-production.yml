@@ -1,3 +1,7 @@
+# Runs directly local-tagged "cm13-live" image
+# you will need a separate mechanism to pull/tag it
+# and to create the external data volumes beforehand
+
 version: '3.2'
 
 services:
@@ -5,7 +9,7 @@ services:
     image: mysql:8
     restart: always
     ports:
-      - "127.0.0.1:3307:3306"
+      - "127.0.0.1:3308:3308"
     environment:
       MYSQL_DATABASE: cm13
       MYSQL_USER: cm13
@@ -17,7 +21,7 @@ services:
       - cm13-net-prod
 
   cm13-game-prod:
-    image: registry.gitlab.com/mekkiti/colonial-warfare-production/production-dev
+    image: cm13-live
     ports:
       - "1400:1400"
     volumes:
@@ -30,13 +34,6 @@ services:
       - cm13-net-prod
     depends_on:
       - cm13-mysql-prod
-
-  cm13-watchtower:
-    image: containrrr/watchtower
-    restart: always
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    command: --interval 60 --label-enable --no-restart --include-stopped
 
 volumes:
   cm13-mysql-prod:
