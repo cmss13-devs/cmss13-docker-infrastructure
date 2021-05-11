@@ -9,7 +9,7 @@ TimeoutStartSec=0
 Restart=always
 ExecStartPre=docker-compose -f docker-cm13-production.yml -p cm13-live stop cm13-game-prod
 ExecStart=docker-compose -f docker-cm13-production.yml -p cm13-live up --build
-ExecStop=docker-compose -f docker-cm13-production.yml -p cm13-live down
+ExecStop=docker-compose -f docker-cm13-production.yml -p cm13-live down 
 
 [Install]
 WantedBy=multi-user.target

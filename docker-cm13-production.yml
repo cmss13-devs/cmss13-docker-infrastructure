@@ -11,6 +11,7 @@ version: '3.2'
 services:
   cm13-game-prod:
     image: cm13-live
+    stop_signal: SIGUSR1
     ports:
       - "1400:1400"
     volumes:

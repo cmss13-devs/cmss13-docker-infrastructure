@@ -6,7 +6,7 @@
 version: '3.2'
 
 services:
-  cm13-mysql-prod:
+  cm13-mysql:
     image: mysql:8
     restart: always
     environment:
@@ -15,12 +15,13 @@ services:
       MYSQL_PASSWORD: ideallychangethis
       MYSQL_ROOT_PASSWORD: ideallychangethis
     volumes:
-      - cm13-mysql:/var/lib/mysql
+      - cm13-mysql-data:/var/lib/mysql
     networks:
       - cm13-net
 
-  cm13-game-prod:
+  cm13-game:
     image: ${IMAGE_SOURCE}
+    stop_signal: SIGUSR1
     ports:
       - "1400"
     volumes:
@@ -31,7 +32,7 @@ services:
       - cm13-mysql
 
 volumes:
-  cm13-mysql:
+  cm13-mysql-data:
   cm13-data:
 
 networks:
