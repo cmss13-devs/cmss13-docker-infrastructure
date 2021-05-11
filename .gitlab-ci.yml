@@ -12,6 +12,7 @@ variables:
   DOCKER_TLS_CERTDIR: "/certs"
   SOURCE_REPOSITORY: registry.gitlab.com/mekkiti/colonial-warfare
   SOURCE_BRANCH: dev
+  SOURCE_IMAGE: ${SOURCE_REPOSITORY}/${SOURCE_BRANCH}
 
 .dind:
   image: docker:20.10.2
@@ -24,11 +25,12 @@ build:runner:
   stage: build
   extends: .dind
   script:
-    - docker pull ${SOURCE_REPOSITORY}/${SOURCE_BRANCH}
+    - docker pull ${SOURCE_IMAGE}
     - docker pull ${CI_REGISTRY_IMAGE}:${SOURCE_BRANCH} || true
     - docker build
       --cache-from ${CI_REGISTRY_IMAGE}:${SOURCE_BRANCH}
       --build-arg BUILDKIT_INLINE_CACHE=1
+      --build-arg SOURCE_IMAGE
       --tag ${CI_REGISTRY_IMAGE}:${SOURCE_BRANCH}
       .
     - docker push ${CI_REGISTRY_IMAGE}:${SOURCE_BRANCH}
