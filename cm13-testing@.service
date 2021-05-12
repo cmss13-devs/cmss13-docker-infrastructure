@@ -12,7 +12,7 @@ TimeoutStartSec=0
 Restart=always
 ExecStartPre=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" stop cm13-game
 ExecStartPre=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" pull
-ExecStart=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" up --abort-on-container-exit
+ExecStart=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" up --force-recreate --abort-on-container-exit
 ExecStop=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" down -v 
 
 [Install]
