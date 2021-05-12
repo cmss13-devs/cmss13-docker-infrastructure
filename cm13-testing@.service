@@ -8,7 +8,6 @@ Requires=docker.service
 [Service]
 Environment="IMAGE_SOURCE=%I"
 WorkingDirectory=/srv/cm13
-TimeoutStartSec=0
 Restart=always
 ExecStartPre=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" stop cm13-game
 ExecStartPre=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" pull
