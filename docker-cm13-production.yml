@@ -17,6 +17,14 @@ services:
     volumes:
       - cm13-data-prod:/cm/data
       - type: bind
+        source: ./cm-restricted-art
+        target: /cm/dynamic/icons
+        read_only: true
+      - type: bind
+        source: ./cm-music
+        target: /cm/sound/music
+        read_only: true
+      - type: bind
         source: ./config
         target: /cm/config
         read_only: true
