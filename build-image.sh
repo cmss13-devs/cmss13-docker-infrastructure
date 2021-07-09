@@ -28,9 +28,13 @@ if [ ! -d "$INSTANCE_DIR" ]; then
 else
   cd "$INSTANCE_DIR"
   if [ -n "$BASE_REPO_URL" ] && [ -n "$BASE_REPO_BRANCH" ]; then
-    git pull --force "$BASE_REPO_URL" "$BASE_REPO_BRANCH:$BASE_REPO_BRANCH" || exit 1
+    git pull --force --no-edit "$BASE_REPO_URL" "$BASE_REPO_BRANCH:$BASE_REPO_BRANCH" || exit 1
   else
-    git pull --force || exit 1
+    if [ "`git rev-parse --abbrev-ref --symbolic-full-name HEAD`" == "HEAD" ]; then
+      echo "HEAD is detached (probably because this was used for testmerging) and you didn't provide a repo/refspec. I can't magically redo it all - please provide branch info again to testmerge again."
+      exit 1
+    fi
+    git pull --force --no-edit || exit 1
   fi
   git checkout "$BASE_REPO_BRANCH"
 fi
@@ -40,7 +44,7 @@ for arg in "$@"; do
   EXTRA_REPO_URL=`echo "$arg" | cut -d'|' -f 1`
   EXTRA_REPO_BRANCH=`echo "$arg" | cut -d'|' -f 2`
   git fetch "$EXTRA_REPO_URL" "$EXTRA_REPO_BRANCH" || exit 1 
-  git rebase "$BASE_REPO_BRANCH" FETCH_HEAD || exit 1
+  git rebase HEAD FETCH_HEAD || exit 1
   shift
 done
 
