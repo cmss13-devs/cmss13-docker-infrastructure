@@ -18,7 +18,7 @@ services:
       - cm13-data-prod:/cm/data
       - type: bind
         source: ./cm-restricted-art
-        target: /cm/dynamic/icons
+        target: /cm/icons/dyn
         read_only: true
       - type: bind
         source: ./cm-music

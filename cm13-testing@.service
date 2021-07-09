@@ -1,18 +1,17 @@
 # systmed unit for dynamic, ephemeral testing containers
 
 [Unit]
-Description=CM13 Testing Container: %I
+Description=CM13 Dynamic Instance: %I
 After=docker.service
 Requires=docker.service
 
 [Service]
-Environment="IMAGE_SOURCE=%I"
-WorkingDirectory=/srv/cm13
+Environment="IMAGE_SOURCE=cm13-%I"
+WorkingDirectory="/srv/cm13"
 Restart=always
 ExecStartPre=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" stop cm13-game
-ExecStartPre=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" pull
-ExecStart=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" up --force-recreate --abort-on-container-exit
-ExecStop=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" down -v 
+ExecStart=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" up --force-recreate --abort-on-container-exit --no-build
+ExecStop=docker-compose -f docker-cm13-testing.yml -p "cm13-testing-%I" down -v
 
 [Install]
 WantedBy=multi-user.target

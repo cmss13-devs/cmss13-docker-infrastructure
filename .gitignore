@@ -1,4 +1,5 @@
 config/
-image-source
+repositories/*
+!repositories/.keep
 cm-restricted-art
 cm-music
