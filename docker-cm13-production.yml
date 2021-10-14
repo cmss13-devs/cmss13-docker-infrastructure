@@ -6,7 +6,7 @@
 # The production deployment is meant to use a separate (container or not)
 # persistent mysql instance as of current
 
-version: '3.2'
+version: '3.12'
 
 services:
   cm13-game-prod:
@@ -17,8 +17,8 @@ services:
     volumes:
       - cm13-data-prod:/cm/data
       - type: bind
-        source: ./cm-restricted-art
-        target: /cm/icons/dyn
+        source: ./cm-restricted-art/
+        target: /cm/icons/custom/
         read_only: true
       - type: bind
         source: ./cm-music
