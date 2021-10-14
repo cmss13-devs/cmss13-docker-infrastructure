@@ -43,11 +43,10 @@ fi
 for arg in "$@"; do
   EXTRA_REPO_URL=`echo "$arg" | cut -d'|' -f 1`
   EXTRA_REPO_BRANCH=`echo "$arg" | cut -d'|' -f 2`
-  git fetch "$EXTRA_REPO_URL" "$EXTRA_REPO_BRANCH" || exit 1 
+  git fetch "$EXTRA_REPO_URL" "$EXTRA_REPO_BRANCH" || exit 1
   git rebase HEAD FETCH_HEAD || exit 1
   shift
 done
 
 # Build source to docker image
-DOCKER_BUILDKIT=1 docker build --target cm-runner --tag "cm13-${INSTANCE_NAME}" . || exit 1
-
+DOCKER_BUILDKIT=1 docker build --target cm-deploy --tag "cm13-${INSTANCE_NAME}" . || exit 1
