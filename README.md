@@ -35,6 +35,25 @@ It is expected the game to terminate after end of round for this, or be forceful
 
 In case of outside hard shutdown request, the systemd unit fist sends SIGINT which is translated by compose to SIGUSR1 in container to request DreamDaemon shutdown.
 
+### Performance considerations
+
+#### a. Networking Overhead
+
+Docker networking overhead can be expensive at high PPS rates. This is not normally a major issue for DD even at 200+ players, but we use host networking in the setup by default as isolation in that vein is not really needed for our usecase.
+
+#### b. Seccomp Syscall Overhead
+
+Making syscalls in Docker can induce major overhead due to extra securty features, notably Seccomp. This should still not be a major issue for SS13/BYOND compared to other factors, but it can technically b disabled using `--privileged` on docker commandline, or `security_opt: seccomp:unconfined` as commented in the compose file. This shouldn't be done lightly as it cuts on a major source of docker isolation!
+
+#### c. Timing Overhead
+
+Seccomp Syscall overhead is not normally a major issue because of mechanisms to go around this eg. vDSO. **Unfortunatly, this is not always available.** One of such problems we've encountered were `gettimeofday` and `clock_gettime` calls: **depending on clock source, vDSO might not be available and result in constant syscalls by the DM runtime**. This is problematic for this setup, because doing thousands of such calls per second (and even more with profiler enabled!) will be **cripling performance**. 
+
+This is solveable by simply using a different clock source systemwide, eg. on Linux TSC with the following kernel boot arguments: `clocksource=tsc tsc=reliable`
+
+See [this article for details](https://careers.appian.com/blog/the-tech-corner/yet-another-reason-your-docker-containers-may-be-slow-on-ec2-clock_gettime-gettimeofday-and-seccomp/) or [this EC2 documentation page for instructions](https://aws.amazon.com/premiumsupport/knowledge-center/manage-ec2-linux-clock-source/) 
+
+
 ### Known Issues & TODO
 
  * Registry / Tag dynamic handling
