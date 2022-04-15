@@ -8,7 +8,10 @@ WorkingDirectory=/srv/cm13
 Restart=always
 ExecStartPre=docker-compose -f docker-cm13-production.yml -p cm13-live stop cm13-game-prod
 ExecStart=docker-compose -f docker-cm13-production.yml -p cm13-live up --force-recreate --no-build
-ExecStop=docker-compose -f docker-cm13-production.yml -p cm13-live down
+KillMode=mixed
+TimeoutStopSec=30
+SendSIGKILL=yes
+FinalKillSignal=SIGINT
 
 [Install]
 WantedBy=multi-user.target

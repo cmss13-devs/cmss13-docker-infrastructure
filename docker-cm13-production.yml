@@ -12,10 +12,13 @@ services:
   cm13-game-prod:
     image: cm13-live
     stop_signal: SIGUSR1
+    #security_opt:
+    #   - seccomp:unconfined
     ports:
       - "1400:1400"
     volumes:
-      - cm13-data-prod:/cm/data
+      - cm13-data-staging:/cm/data
+      - cm13-cfg-prod:/byond/cfg/
       - type: bind
         source: ./cm-restricted-art/
         target: /cm/icons/custom/
@@ -28,7 +31,10 @@ services:
         source: ./config
         target: /cm/config
         read_only: true
+    network_mode: "host"
 
 volumes:
   cm13-data-prod:
+    external: true
+  cm13-cfg-prod:
     external: true
